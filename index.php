@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (empty($_SESSION['NAMA'])) {
+  header("location:login.php?access=failed");
+}
 include 'connection.php';
 ?>
 <!DOCTYPE html>
@@ -27,7 +30,8 @@ include 'connection.php';
       }
       ?>
     </div>
-    <footer class="text-center border-top fixed-bottom p-3">Copyright &copy; 2024 PPKD - Jakarta Pusat.</footer>
+    <footer class="text-center border-top fixed-bottom p-3" style="background-color: #4a5a4a">Copyright &copy; 2024 PPKD - Jakarta Pusat.</footer>
+    <script src="app.js"></script>
   </div>
 </body>
 

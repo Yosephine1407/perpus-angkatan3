@@ -5,13 +5,14 @@ if (isset($_POST['simpan'])) {
     $tgl_peminjam = $_POST['tgl_peminjam'];
     $tgl_pengembalian = $_POST['tgl_pengembalian'];
     $id_buku = $_POST['id_buku'];
+    $status = "Di Pinjam";
 
 
     // sql=structur query language / DML=data manipulation language
     // select, insert, update, delete
     $insert = mysqli_query($connection, "INSERT INTO peminjaman
-    (no_peminjam, id_anggota, tgl_peminjam, tgl_pengembalian) VALUES 
-    ('$no_peminjam', '$id_anggota','$tgl_peminjam','$tgl_pengembalian')");
+    (no_peminjam, id_anggota, tgl_peminjam, tgl_pengembalian,status) VALUES 
+    ('$no_peminjam', '$id_anggota','$tgl_peminjam','$tgl_pengembalian', '$status')");
     $id_peminjam = mysqli_insert_id($connection);
 
 
@@ -38,7 +39,7 @@ $querydetail_peminjam = mysqli_query($connection, "SELECT buku.nama_buku, detail
 
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $delete = mysqli_query($connection, "DELETE FROM peminjaman WHERE id='$id'");
+    $delete = mysqli_query($connection, "UPDATE peminjaman  SET deleted_at = 1 WHERE id='$id'");
     header('location:?pg=peminjaman&hapus=berhasil');
 }
 
@@ -67,9 +68,11 @@ $kode_pinjam = "PJM/" . date('dmy') . "/" . sprintf("%03s", $id_pinjam);
                         <label for="">No Peminjaman</label>
                         <input required type="text" class="form-control" name="no_peminjam" value="<?php echo isset($_GET['detail']) ? $rowpeminjaman['no_peminjam'] : $kode_pinjam ?>" readonly>
                     </div>
+
                     <div class="mb-3">
                         <label for="">Tanggal Peminjaman</label>
-                        <input required type="date" class="form-control" name="tgl_peminjam" value="<?php echo isset($_GET['detail']) ? $rowpeminjaman['tgl_peminjam'] : '' ?>" readonly>
+                        <input required type="date" class="form-control" name="tgl_peminjam" value="<?php echo isset($_GET['detail']) ? $rowpeminjaman['tgl_peminjam'] : '' ?>"
+                            <?php echo isset($_GET['detail']) ? 'readonly' : '' ?>>
                     </div>
                     <?php if (empty($_GET['detail'])): ?>
                         <div class="mb-3">
@@ -96,56 +99,56 @@ $kode_pinjam = "PJM/" . date('dmy') . "/" . sprintf("%03s", $id_pinjam);
                                 <?php endwhile ?>
                             </select>
                         <?php else: ?>
-                            <input type="text" class="form-control" readonly value="<?php echo $rowpeminjaman['nama_anggota']; ?>">
-                        <?php endif; ?>
+                            <input type="text" class="form-control" readonly value="<?php echo $rowpeminjaman['nama_anggota']; ?>"
+                                <?php endif ?>
+
+                                <div class="mb-3">
+                            <label for="">Tanggal Pengembalian</label>
+                            <input required type="date" class="form-control" name="tgl_peminjam" value="<?php echo isset($_GET['detail']) ? $rowpeminjaman['tgl_pengembalian'] : '' ?>"
+                                <?php echo isset($_GET['detail']) ? 'readonly' : '' ?>>
                     </div>
-                    <div class="mb-3">
-                        <label for="">Tanggal Pengembalian</label>
-                        <input required type="date" class="form-control" name="tgl_pengembalian" value="<?php echo isset($_GET['detail']) ? $rowpeminjaman['tgl_pengembalian'] : '' ?>" readonly>
-                    </div>
-                </div>
-                <?php if (empty($_GET['detail'])): ?>
-                    <div align="right" class="mb-3">
-                        <button type="button" id="add-row" class="btn btn-primary">Tambah Row</button>
-                    </div>
-                <?php endif ?>
-                <!-- table data dari query dengan php -->
-                <?php if (isset($_GET['detail'])): ?>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Buku</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $no = 1;
-                            while ($rowdetail_peminjam = mysqli_fetch_assoc($querydetail_peminjam)): ?>
+                    <?php if (empty($_GET['detail'])): ?>
+                        <div align="right" class="mb-3">
+                            <button type="button" id="add-row" class="btn btn-primary">Tambah Row</button>
+                        </div>
+                    <?php endif ?>
+                    <!-- table data dari query dengan php -->
+                    <?php if (isset($_GET['detail'])): ?>
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td><?php echo $no++ ?></td>
-                                    <td><?php echo $rowdetail_peminjam['nama_buku'] ?></td>
-
+                                    <th>No</th>
+                                    <th>Nama Buku</th>
                                 </tr>
-                            <?php endwhile ?>
-                        </tbody>
+                            </thead>
+                            <tbody>
+                                <?php $no = 1;
+                                while ($rowdetail_peminjam = mysqli_fetch_assoc($querydetail_peminjam)): ?>
+                                    <tr>
+                                        <td><?php echo $no++ ?></td>
+                                        <td><?php echo $rowdetail_peminjam['nama_buku'] ?></td>
 
-                    </table>
-                    <!-- ini table data dari js -->
-                <?php else: ?>
-                    <table id="table" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nama Buku</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-row">
-                        </tbody>
-                    </table>
-                    <div class="mt-3">
-                        <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                    </div>
-                <?php endif ?>
+                                    </tr>
+                                <?php endwhile ?>
+                            </tbody>
+
+                        </table>
+                        <!-- ini table data dari js -->
+                    <?php else: ?>
+                        <table id="table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nama Buku</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-row">
+                            </tbody>
+                        </table>
+                        <div class="mt-3">
+                            <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                        </div>
+                    <?php endif ?>
         </form>
     </fieldset>
 </div>

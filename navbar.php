@@ -24,6 +24,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="?pg=peminjaman">Peminjaman</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?pg=pengembalian">Pengembalian</a>
+                    </li>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="?pg=level">Level</a>

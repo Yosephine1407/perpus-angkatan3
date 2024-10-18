@@ -1,5 +1,6 @@
 <?php
-$query = mysqli_query($connection, "SELECT anggota.nama_anggota, peminjaman.* FROM peminjaman LEFT JOIN anggota ON anggota.id = peminjaman.id_anggota ORDER BY id  DESC");
+$query = mysqli_query($connection, "SELECT anggota.nama_anggota, peminjaman.* FROM  peminjaman LEFT JOIN anggota ON anggota.id = peminjaman.id_anggota WHERE deleted_at = 0 
+ORDER BY id DESC");
 ?>
 
 <div class="container mt-4 mb-3">
@@ -32,8 +33,8 @@ $query = mysqli_query($connection, "SELECT anggota.nama_anggota, peminjaman.* FR
                                 <td> <?php echo $no++ ?></td>
                                 <td><?php echo $peminjaman['nama_anggota'] ?></td>
                                 <td><?php echo $peminjaman['no_peminjam'] ?></td>
-                                <td><?php echo $peminjaman['tgl_peminjam'] ?></td>
-                                <td><?php echo $peminjaman['tgl_pengembalian'] ?></td>
+                                <td><?php echo date('d-m-Y', strtotime($peminjaman['tgl_peminjam'])) ?></td>
+                                <td><?php echo date('d-m-Y', strtotime($peminjaman['tgl_pengembalian'])) ?></td>
                                 <td><?php echo $peminjaman['status'] ?></td>
                                 <td><a href="?pg=tambah-peminjaman&detail=<?php echo $peminjaman['id'] ?>" class="btn btn-success btn-sm">Detail
 

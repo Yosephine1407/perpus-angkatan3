@@ -30,8 +30,27 @@ include 'connection.php';
       }
       ?>
     </div>
+
+
     <footer class="text-center border-top fixed-bottom p-3" style="background-color: #4a5a4a">Copyright &copy; 2024 PPKD - Jakarta Pusat.</footer>
     <script src="app.js"></script>
+    <script src="assets/bootstrap/bootstrap-5.3.3/dist/js/jquery-3.7.1.min.js"></script>
+    <script>
+      $("#id_peminjam").change(function() {
+        let no_peminjam = $(this).find('option:selected').val();
+        $.ajax({
+          url: "ajax/getPeminjam.php?no_peminjam=" + no_peminjam,
+          type: "get",
+          dataType: "json",
+          success: function(res) {
+            $('#no_peminjam').val(res.data.no_peminjam);
+            $('#tgl_peminjam').val(res.data.tgl_peminjam);
+            $('#tgl_pengembalian').val(res.data.tgl_pengembalian);
+            $('#nama_anggota').val(res.data.nama_anggota);
+          }
+        });
+      });
+    </script>
   </div>
 </body>
 

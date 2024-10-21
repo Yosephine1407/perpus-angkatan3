@@ -1,27 +1,25 @@
 <?php
 if (isset($_POST['simpan'])) {
-    $no_peminjam = $_POST['no_peminjam'];
-    $id_anggota = $_POST['id_anggota'];
-    $tgl_peminjam = $_POST['tgl_peminjam'];
-    $tgl_pengembalian = $_POST['tgl_pengembalian'];
-    $id_buku = $_POST['id_buku'];
-    $status = "Di Pinjam";
 
+    $id_peminjam = $_POST['id_peminjam'];
+    $querypeminjaman = mysqli_query($connection, "SELECT id, no_peminjam FROM peminjaman WHERE no_peminjam = '$id_peminjam'");
+    $rowpeminjaman = mysqli_fetch_assoc($querypeminjaman);
+    $id_peminjam = $rowpeminjaman['id'];
+    $denda = $_POST['denda'];
+    if ($denda == 0) {
+    } else {
+        $status = 1;
+    }
 
     // sql=structur query language / DML=data manipulation language
     // select, insert, update, delete
-    $insert = mysqli_query($connection, "INSERT INTO peminjaman
-    (no_peminjam, id_anggota, tgl_peminjam, tgl_pengembalian,status) VALUES 
-    ('$no_peminjam', '$id_anggota','$tgl_peminjam','$tgl_pengembalian', '$status')");
-    $id_peminjam = mysqli_insert_id($connection);
+    $insert = mysqli_query($connection, "INSERT INTO pengembalian
+    (id_peminjam, status, denda) VALUES ('$id_peminjam', '$status', '$denda')");
+
+    $updatepeminjaman = mysqli_query($connection, "UPDATE peminjaman SET status ='Di Kembalikan' WHERE id='$id_peminjam'");
 
 
-    foreach ($id_buku as $key => $buku) {
-        $id_buku = $_POST['id_buku'][$key];
-        $insertDetail = mysqli_query($connection, "INSERT into detail_peminjam(id_peminjam, id_buku) VALUES ('','$id_buku')");
-    }
-
-    header("location:?pg=peminjaman&tambah=berhasil");
+    header("location:?pg=pengembalian&tambah=berhasil");
 }
 
 
@@ -89,12 +87,16 @@ $queryKodePnjm = mysqli_query($connection, "SELECT  * FROM peminjaman WHERE stat
                                     <div class="col-sm-6">
                                         <div class="mb-3">
                                             <label for="">Nama Anggota</label>
-                                            <input type="text" readonly id="no_peminjam" class="form-label">
+                                            <input type="text" readonly id="nama_anggota" class="form-control">
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="">Tanggal Peminjaman</label>
                                         <input type="text" readonly id="tgl_peminjam" class="form-control">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="">Denda</label>
+                                        <input type="text" readonly id="denda" name="denda" class="form-control">
                                     </div>
                                     <div class="mb-3">
                                         <label for="">Tanggal Pengembalian</label>
@@ -104,42 +106,25 @@ $queryKodePnjm = mysqli_query($connection, "SELECT  * FROM peminjaman WHERE stat
 
 
                                     <!-- table data dari query dengan php -->
-                                    <?php if (isset($_GET['detail'])): ?>
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nama Buku</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php $no = 1;
-                                                while ($rowdetail_peminjam = mysqli_fetch_assoc($querydetail_peminjam)): ?>
-                                                    <tr>
-                                                        <td><?php echo $no++ ?></td>
-                                                        <td><?php echo $rowdetail_peminjam['nama_buku'] ?></td>
 
-                                                    </tr>
-                                                <?php endwhile ?>
-                                            </tbody>
-
-                                        </table>
-                                        <!-- ini table data dari js -->
-                                    <?php else: ?>
-                                        <table id="table" class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nama Buku</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-row">
-                                            </tbody>
-                                        </table>
-                                        <div class="mt-3">
-                                            <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                                        </div>
-                                    <?php endif ?>
+                                    <table id="table-pengembalian" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Buku</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-row">
+                                        </tbody>
+                                    </table>
+                                    <div class="mt-3">
+                                        <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </fieldset>
 </div>

@@ -13,7 +13,7 @@ addRow.addEventListener("click", function () {
         alert("Nama buku tidak boleh kosong");
         return false;
     }
-    namaBukuCell.innerHTML = bukuName + "<input type='hidden' name='id_buku[] value='" + bukuId +"'>";
+    namaBukuCell.innerHTML = bukuName + "<input type='hidden' name='id_buku[]'  value='" + bukuId +"'>";
     aksiCell.innerHTML = "<button type = 'button' onclick= 'deleteRow(this)' class='btn btn-sm btn-danger'>Hapus</button>";
 });
 

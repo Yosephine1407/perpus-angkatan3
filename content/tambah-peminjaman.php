@@ -18,7 +18,7 @@ if (isset($_POST['simpan'])) {
 
     foreach ($id_buku as $key => $buku) {
         $id_buku = $_POST['id_buku'][$key];
-        $insertDetail = mysqli_query($connection, "INSERT into detail_peminjam(id_peminjam, id_buku) VALUES ('','$id_buku')");
+        $insertDetail = mysqli_query($connection, "INSERT into detail_peminjam(id_peminjam, id_buku) VALUES ('$id_peminjam','$id_buku')");
     }
 
     header("location:?pg=peminjaman&tambah=berhasil");
@@ -104,7 +104,7 @@ $kode_pinjam = "PJM/" . date('dmy') . "/" . sprintf("%03s", $id_pinjam);
 
                                 <div class="mb-3">
                             <label for="">Tanggal Pengembalian</label>
-                            <input required type="date" class="form-control" name="tgl_peminjam" value="<?php echo isset($_GET['detail']) ? $rowpeminjaman['tgl_pengembalian'] : '' ?>"
+                            <input required type="date" class="form-control" name="tgl_pengembalian" value="<?php echo isset($_GET['detail']) ? $rowpeminjaman['tgl_pengembalian'] : '' ?>"
                                 <?php echo isset($_GET['detail']) ? 'readonly' : '' ?>>
                     </div>
                     <?php if (empty($_GET['detail'])): ?>
